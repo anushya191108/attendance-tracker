@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Tracker</title>
+    <style>
+        body { font-family: Arial; }
+        .low { color: red; }
+        .ok { color: green; }
+    </style>
+</head>
+<body>
+
+<h2>Attendance Tracker</h2>
+
+<form method="POST" action="/add">
+    <input type="text" name="name" placeholder="Subject name" required>
+    <button>Add</button>
+</form>
+
+<hr>
+
+<table border="1">
+<tr>
+    <th>Subject</th>
+    <th>Attended</th>
+    <th>Total</th>
+    <th>%</th>
+    <th>Can Skip</th>
+    <th>Action</th>
+</tr>
+
+{% for s in subjects %}
+<tr>
+    <td>{{ s.name }}</td>
+    <td>{{ s.attended }}</td>
+    <td>{{ s.total }}</td>
+
+    <td class="{{ 'low' if s.warning else 'ok' }}">
+        {{ s.percentage }}%
+    </td>
+
+    <td>{{ s.can_skip }}</td>
+
+    <td>
+        <a href="/update/{{ s.id }}/present">Present</a> |
+        <a href="/update/{{ s.id }}/absent">Absent</a>
+    </td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
