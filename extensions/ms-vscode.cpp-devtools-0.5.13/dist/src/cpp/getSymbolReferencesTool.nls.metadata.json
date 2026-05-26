@@ -1,9 +1,0 @@
-{
-	"messages": [
-		"Finding symbol references"
-	],
-	"keys": [
-		"cpp.getSymbolReferences.startCalling"
-	],
-	"filePath": "src\\cpp\\getSymbolReferencesTool"
-}

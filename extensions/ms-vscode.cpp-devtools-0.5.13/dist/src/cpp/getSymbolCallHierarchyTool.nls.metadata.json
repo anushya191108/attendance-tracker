@@ -1,9 +1,0 @@
-{
-	"messages": [
-		"Getting symbol call hierarchy"
-	],
-	"keys": [
-		"cpp.getSymbolCallHierarchy.startCalling"
-	],
-	"filePath": "src\\cpp\\getSymbolCallHierarchyTool"
-}

@@ -1,7 +1,0 @@
-{
-    "productCode": "asimov.VsCodeExtensions",
-    "EnableTelemetryJson": true,
-    "UseFolderBasedTelemetryJson": true,
-    "OptedInAISuggestions": true,
-    "EnableAiTelemetryBootstrap": true
-}
