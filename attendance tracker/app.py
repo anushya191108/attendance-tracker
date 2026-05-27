@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect,session
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 app = Flask(__name__)
+app.secret_key = "attendance_secret"
 def get_db():
     conn = sqlite3.connect("attendance.db")
     conn.row_factory = sqlite3.Row
@@ -16,11 +18,17 @@ def init_db():
         total INTEGER DEFAULT 0
     )
     """)
+    cur.execute("""CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    password TEXT)""")
     conn.commit()
     conn.close()
 init_db()
 @app.route("/")
 def index():
+    if "user" not in session:
+        return redirect("/login")
     conn = get_db()
     cur = conn.cursor()
     cur.execute("SELECT * FROM data")
@@ -54,6 +62,61 @@ def add():
     conn.close()
     return redirect("/")
 @app.route("/update/<int:id>/<string:action>")
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+
+    if request.method == "POST":
+
+        username = request.form["username"]
+        password = generate_password_hash(request.form["password"])
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        cur.execute(
+            "INSERT INTO users (username, password) VALUES (?, ?)",
+            (username, password)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect("/login")
+
+    return render_template("signup.html")
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        username = request.form["username"]
+        password = request.form["password"]
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        cur.execute(
+            "SELECT * FROM users WHERE username=?",
+            (username,)
+        )
+
+        user = cur.fetchone()
+
+        conn.close()
+
+        if user and check_password_hash(user["password"], password):
+
+            session["user"] = username
+
+            return redirect("/")
+
+    return render_template("login.html")
+@app.route("/logout")
+def logout():
+
+    session.pop("user", None)
+
+    return redirect("/login")
 def update(id, action):
     conn = get_db()
     cur = conn.cursor()
