@@ -1,0 +1,14 @@
+venv/
+.venv/
+__pycache__/
+
+c program/
+cli/
+extensions/
+
+.vscode/
+
+*.db
+*.pyc
+*.exe
+*.zip
